@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { BiMessageAdd } from "react-icons/bi";
 
 function AddTodo({ onNewItem }) {
   // passing input name and date in button
@@ -53,7 +54,7 @@ function AddTodo({ onNewItem }) {
         <div className="col-2">
           <button
             type="button"
-            className="btn btn-success kg-button" onClick={handleAddButtonClick}>Add
+            className="btn btn-success kg-button" onClick={handleAddButtonClick}><BiMessageAdd />
           </button>
         </div>
       </div>
