@@ -1,19 +1,19 @@
+import { useContext } from "react";
 import TodoItem from "./TodoItem";
 import styles from "./TodoItems.module.css";
-import PropTypes from 'prop-types';
+import { todoItemsContext } from "../store/todo_items_store";
 
-const TodoItems = ({ todoItems, onDeleteClick }) => {
+const TodoItems = () => {
+
+  const { todoItems } = useContext(todoItemsContext);
+
   return (
     <div className={styles.items_container}>
       {todoItems.map((item, index) => (
-        <TodoItem key={index} todoName={item.name} todoDate={item.dueDate} onDeleteClick={onDeleteClick}/>
+        <TodoItem key={index} todoName={item.name} todoDate={item.dueDate}/>
       ))}
     </div>
   );
 };
 
-TodoItems.propTypes = {
-  todoItems: PropTypes.array.isRequired,
-  onDeleteClick: PropTypes.func.isRequired
-}
 export default TodoItems;

@@ -1,69 +1,65 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
+import { useRef } from "react";
 import { BiMessageAdd } from "react-icons/bi";
+import { todoItemsContext } from "../store/todo_items_store";
+import { useContext } from "react";
 
-function AddTodo({ onNewItem }) {
-  // passing input name and date in button
-  const [todoName, setTodoName] = useState("");
-  const [todoDate, setTodoDate] = useState(getCurrentDate());
+function AddTodo() {
+  
+  const { addNewItem } = useContext(todoItemsContext);
+  const todoNameElement = useRef();
+  const todoDateElement = useRef();
 
-  // to get default date 
+  // to get default date
   function getCurrentDate() {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    const month = `${currentDate.getMonth() + 1}`.padStart(2, '0');
-    const day = `${currentDate.getDate()}`.padStart(2, '0');
+    const month = `${currentDate.getMonth() + 1}`.padStart(2, "0");
+    const day = `${currentDate.getDate()}`.padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
-
-  const todoHandleName = (event) => {
-    //get value of name
-    setTodoName(event.target.value);
-  };
-
-  const todoHandleDate = (event) => {
-    //get value of date
-    setTodoDate(event.target.value);
-  };
+  getCurrentDate();
 
   // click add button,calling onNewItem(props from another component)&pass values in that prop
-  const handleAddButtonClick = () => {
-   if (!todoName) {
+  const handleAddButtonClick = (event) => {
+    event.preventDefault();
+
+    const todoName = todoNameElement.current.value;
+    const todoDate = todoDateElement.current.value;
+    todoNameElement.current.value = "";
+    todoDateElement.current.value = "";
+
+    if (!todoName) {
       alert("Please Enter Name!");
-    } else {
-      onNewItem(todoName, todoDate); // values adding in this prop
+    } else if (!todoDate) {
+      alert("Please Select Date!");
     }
-    setTodoName("");
-    setTodoDate(getCurrentDate());
+     else {
+      addNewItem(todoName, todoDate); // values adding in this prop
+    }
+    
   };
 
   return (
     <div className="container text-center">
-      <div className="row kg-row">
+      <form className="row kg-row" onSubmit={handleAddButtonClick}>
         <div className="col-6">
           <input
+            ref={todoNameElement}
             type="text"
-            value={todoName}
             placeholder="Enter Todo Here"
-            onChange={todoHandleName}
           />
         </div>
         <div className="col-4">
-          <input type="date" value={todoDate} onChange={todoHandleDate} />
+          <input ref={todoDateElement} type="date" />
         </div>
         <div className="col-2">
-          <button
-            type="button"
-            className="btn btn-success kg-button" onClick={handleAddButtonClick}><BiMessageAdd />
+          <button type="submit" className="btn btn-success kg-button">
+            <BiMessageAdd />
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
-
-AddTodo.propTypes = {
-  onNewItem: PropTypes.func.isRequired,
-};
 
 export default AddTodo;
